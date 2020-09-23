@@ -1,0 +1,518 @@
+<!-- PAGE TO DISPLAY A SINGLE BOOK'S DETAILS;
+    ALONG WITH EDITTING THE DETECTED TEXT FEATURE -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VIS</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="design_files/css/all.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+            
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
+
+        <style>
+            .dropdown {
+              position: relative;
+              display: inline-block;
+            }
+            
+            .dropdown-content {
+              display: none;
+              position: absolute;
+              background-color: #333;
+              min-width: 160px;
+              box-shadow: 0px 8px 16px 0px whitesmoke;
+              padding: 12px 16px;
+              z-index: 1;
+            }
+            
+            .dropdown:hover .dropdown-content {
+              display: block;
+            }
+
+            @font-face {
+              font-family: 'KeepCalm';
+              src:  
+                    url('Files/Fonts/KeepCalm-Medium.eot?') format('embedded-opentype'),
+                    url('Files/Fonts/KeepCalm-Medium.woff') format('woff'),
+                    url('Files/Fonts/KeepCalm-Medium.woff2') format('woff2'),
+                    url('Files/Fonts/KeepCalm-Medium.ttf') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'anuratiregular';
+                src: url('design_files/fonts/Anurati/anurati-regular-webfont.woff2') format('woff2'),
+                url('design_files/fonts/Anurati/anurati-regular-webfont.woff') format('woff');
+            }
+
+            @font-face {
+                font-family: "Anurati-Regular";
+                src: url("design_files/fonts/Anurati-Regular Font/Anurati-Regular.ttf");
+            }
+
+            @font-face {
+                font-family: "alexana";
+                src: url("design_files/fonts/fm/Alexana/Alexana Neue.ttf");
+            }
+
+            @font-face {
+                font-family: "elixia";
+                src: url("design_files/fonts/fm/Elixia_Free_Font/ELIXIA.ttf");
+            }
+
+            @font-face {
+                font-family: "marvel";
+                src: url("design_files/fonts/marvel/Marvel.ttf");
+            }
+
+            .tmp {
+                font-family: marvel;
+            }
+
+            /* Scroll-bar Styling */
+            /* width */
+            ::-webkit-scrollbar {
+                width: 15px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 5px whitesmoke;
+                /* border-radius: 10px; */
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #343a40;
+                /* border-radius: 10px; */
+            }
+
+            /* Handle on hover */
+            /* ::-webkit-scrollbar-thumb:hover {
+                background:whitesmoke;
+                box-shadow: inset 0 0 5px #343a40;
+            } */
+            /* Scroll-bar Styling */
+
+
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+                scroll-behavior: auto;
+            }
+
+            p, img {
+                border-radius: 10px;
+            }
+
+            i:hover {
+                color: darkturquoise;
+            }
+
+            hr {
+                border: 1px solid darkturquoise;
+                border-radius: 5px;
+            }
+
+            h3:hover {
+                color: darkturquoise;
+                text-decoration: none;
+            }
+
+            textarea {
+                background: #343a40;
+                color: whitesmoke;
+                border: 2px solid whitesmoke;
+                border-color: #343a40;
+                resize:none;
+                overflow: hidden;
+                outline: none;
+            }
+
+            textarea:hover {
+                border-color: whitesmoke;
+                border-width: 2px 0px 2px 0px;
+                background: #343a40;
+                overflow: auto;
+            }
+
+            textarea:focus {
+                border-color: whitesmoke;
+                border-width: 2px 0px 2px 0px;
+            }
+
+            .tbtn {
+                color: white;
+                background: #343a40;
+                width : 150px;
+                height: 50px;
+                box-shadow:aqua;
+                border: none;
+                outline: none;
+                border-radius: 10px;
+            }
+            .tbtn:focus {
+                outline: none;
+            }
+            
+            .tbtn:hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+            }
+
+            .ttab {
+                width: 100%;
+                text-align: center;
+                background-color: whitesmoke;
+                color: #343a40;
+            }
+
+            .tcont {
+                background-color: red;
+                filter: blur(1px);
+            }
+
+            .rangegrid {
+                display: grid;
+                grid-template-columns: auto 50px auto;
+                grid-gap: 10px;
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .gridcont {
+                display: grid;
+                grid-template-columns: repeat(3, auto);
+                grid-gap: 10px;
+                padding: 10px;
+                grid-column-gap: 10px;
+            }
+
+            .gridcont .gridcell {
+                border-style: solid;
+                border: whitesmoke;
+            }
+
+            .splgridcont {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(250px, 1fr));
+                grid-gap: 10px;
+                padding: 10px;
+            }
+
+            .recbtn {
+                width: 100%;
+                height: 160px;
+                text-align: center;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            .recbtn:hover {
+                background-color: #1d2124;
+            }
+
+            .child {
+                position: absolute;
+                top: 50%;
+                margin-top: -25px;
+            }
+
+            .left {
+                width: 450px;
+            }
+            .lefti {
+                text-align: center;
+                float: right;
+            }
+
+            .middle {
+                width: 50px;
+            }
+
+            .right {
+                width: 450px;
+            }
+            .righti {
+                text-align: center;
+                float: left;
+            }
+
+            .filebtn {
+                background-color: black;
+                border-radius: 10px;
+            }
+            .overlay:hover {
+                opacity: 1;
+            }
+
+            .dropdown-content {
+                font-size : 16px;
+                display: none;
+                position: absolute;
+                background-color: rgb(52, 58, 64);
+                min-width: 150px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content a {
+                color: whitesmoke;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content :hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+                border-radius: 10px;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+        </style>
+        
+
+    </head>
+    <body class="h-100">
+        <nav class="navbar navbar-expand-lg bg-dark text-white" style="color: black;">
+            <div class="container-fluid">
+                <a class="navbar-brand" style="color: rgb(255, 255, 255); text-decoration-style :wavy;" href="/home">
+                    <img src="design_files/logos/mark 43.png" style="border: none; border-radius: 0; width: 125px; height: 45px">
+                </a>
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/image'">Upload Images</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/pdf'">Upload PDFs</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/mybooks'">My Books</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/allbooks'">All Books</button>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="tbtn navbar-brand">Options</button>
+                            <div class="dropdown-content">
+                              <a href="/accounts">My Profile</a>                                      
+                              <a id="btn-logout" href="/signin">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="row h-100 bg-light">
+
+            <div class="col-lg-12">
+                <div class="container" id="container_1">
+
+                    <!-- POSTS STARTS HERE -->
+
+                    <div class="jumbotron bg-dark" style="margin-top: 50px;">
+                        <div class="container text-center">
+                            <hr>
+                            <div id="heading" class="text-center bg-dark text-light" style="margin-bottom: 50px;">
+                                
+                                
+                            </div>
+                            <hr>
+                            <div class="container text-center">
+                                <div class="row container-fluid bg-3">
+                                    <div class="col-sm-12" id="books">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                    
+                    <!-- POSTS END HERE -->
+
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="js/index.js"></script>
+
+        <script>
+            var book = "<%= bookname %>"
+            
+            heading(book)
+
+            function heading(book) {
+                var head = capitalize(book)
+                var postsHtml = ''
+                postsHtml += "<br>"
+                postsHtml += "<h3 style='height: -50%'>" + head + "</h3>"
+                $('#heading').html(postsHtml)
+            }
+
+            function capitalize(head) {
+                var res = head.split(" ");
+                res = res.map(function(res){
+                    return res.charAt(0).toUpperCase() + res.slice(1);
+                })
+                head = ''
+                res.forEach(element => {
+                    head+=element + ' '
+                });
+                return head
+            }
+
+        // *************** FUNCTION TO SAVE EDITTED TEXT ******************
+
+            function save(pid, page) {
+                var id = pid.id
+                var p = $('#' + id)
+                
+                var user = firebase.auth().currentUser
+
+                var dbBook = firebase.database().ref().child('Books').child(book)
+                var dbValue = dbBook.orderByChild('page').equalTo(page)
+                dbValue.on("value", function(snap) {
+                    
+                    snap.forEach(function (singlePost) {
+                        console.log(singlePost.val().text)
+                        console.log(singlePost.key)
+                        
+                        var dbKey = singlePost.key
+                        console.log('dbKey = '+dbKey)
+                        var f = dbBook.child(dbKey)
+                        console.log(f)
+
+                        updates = {
+                            'text': p.val(),
+                        }
+
+                        f.update(updates)
+                    })
+                })
+                
+                var editHtml = "<p id='" + id + "' class='text-left'>"
+                        editHtml += p.val()
+                    editHtml += "</p>"
+                editHtml += "<span onclick=\"edit(" + id + "," + page + ")\"><i class='far fa-3x fa-edit'></i></span>"
+
+                p.hide()
+                $('#editPost_' + id).html(editHtml)
+            }
+
+        // *************** FUNCTION TO SAVE EDITTED TEXT ******************
+
+        // *************** FUNCTION TO EDIT DETECTED-TEXT ******************
+
+            function edit(pid, page) {
+                var id = pid.id
+                var p = $('#' + id)
+                console.log(pid)
+                console.log(page)
+                console.log(p)
+                console.log(id)
+                console.log(p.text())
+
+                var editHtml = "<textarea id='" + id + "' style='min-height:300px; max-height:100%; min-width:400px'>" + p.text() + "</textarea><br>"
+                editHtml += "<span onclick=\"save(" + id + "," + page + ")\"><i class='far fa-save fa-3x'></i></span><br><br>"
+                
+                p.hide()
+                $('#editPost_' + id).html(editHtml)
+            }
+
+        // *************** FUNCTION TO EDIT DETECTED-TEXT ******************
+
+        // *************** RETRIEVING AND DISPLAYING DATA FROM FIREBASE ******************
+
+            retrieve(book)
+            function retrieve(book) {
+
+                var dbPosts = firebase.database().ref().child('Books').child(book).orderByChild('page')
+                dbPosts.on('value', function(posts) {
+                    if(posts.exists()) {
+
+                        var postsHtml = ''
+                        
+                        posts.forEach(function (singlePost) {
+                            
+                            postsHtml += "<hr><div class='jumbotron bg-dark text-light border border-dark'>"
+                                postsHtml += "<div class='gridcont' style='margin: 5px; width: auto; max-height: 100%'>"
+                                    postsHtml += "<div style='border-style: solid; border: whitesmoke'>"
+                                        postsHtml += "<h4 class='text-center bg-dark text-light'>"
+                                            + "Page " + singlePost.val().page + "</h4>"
+                                            postsHtml += "<img style='margin: 5px; max-width: 100%; max-height: 600px' src='"
+                                            postsHtml += singlePost.val().image + "'/>"
+                                        postsHtml += "</div>"
+                                        
+                                        postsHtml += "<div style='border-style: solid; border: whitesmoke'>"
+                                            let pid='p_id_' + singlePost.val().page
+                                            console.log(pid)
+                                            postsHtml += "<h4 class='text-center bg-dark text-light'>Detected-Text</h4>"
+                                            
+                                            postsHtml += "<div id='editPost_" + pid + "'>"
+                                                postsHtml += "<p id='" + pid + "' class='text-left'>"
+                                                    postsHtml += singlePost.val().text
+                                                postsHtml += "</p>"
+                                                
+                                                postsHtml += "<span onclick=\"edit(" + pid + "," + singlePost.val().page + ")\"><i class='far fa-3x fa-edit'></i></span>"
+                                            postsHtml += "</div>"
+                                        postsHtml += "</div>"
+                                    postsHtml += "</div><br>"
+                                        
+                                        
+                                        postsHtml += "<div class='row'>"
+                                            postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                + "File Name : " + singlePost.val().name
+                                                + "</p></div>"
+
+                                            postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                + "Posted By : " + singlePost.val().user_name
+                                                + "</p></div>"
+                                            
+                                            postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                + "Time : " + singlePost.val().time
+                                                + "</p></div>"
+                                            
+                                                postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                    + "Date : " + singlePost.val().date
+                                                    + "</p></div>"
+                                postsHtml += "</div><br>"
+                                                
+                            postsHtml += "</div><hr>"
+                        });
+                        $('#books').html(postsHtml)
+                    }
+                })
+            }
+
+        // *************** RETRIEVING AND DISPLAYING DATA FROM FIREBASE ******************
+
+        </script>
+
+        <script>
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (!user) {
+                    window.location.href = "/signin";
+                }
+                else {
+                    console.log('user signed in!!!')
+                }
+            });
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,380 @@
+<!-- PAGE TO DISPLAY A LIST OF ALL BOOKS -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VIS</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+            
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
+
+        <style>
+            .dropdown {
+              position: relative;
+              display: inline-block;
+            }
+            
+            .dropdown-content {
+              display: none;
+              position: absolute;
+              background-color: #333;
+              min-width: 160px;
+              box-shadow: 0px 8px 16px 0px whitesmoke;
+              padding: 12px 16px;
+              z-index: 1;
+            }
+            
+            .dropdown:hover .dropdown-content {
+              display: block;
+            }
+
+            @font-face {
+              font-family: 'KeepCalm';
+              src:  
+                    url('Files/Fonts/KeepCalm-Medium.eot?') format('embedded-opentype'),
+                    url('Files/Fonts/KeepCalm-Medium.woff') format('woff'),
+                    url('Files/Fonts/KeepCalm-Medium.woff2') format('woff2'),
+                    url('Files/Fonts/KeepCalm-Medium.ttf') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'anuratiregular';
+                src: url('design_files/fonts/Anurati/anurati-regular-webfont.woff2') format('woff2'),
+                url('design_files/fonts/Anurati/anurati-regular-webfont.woff') format('woff');
+            }
+
+            @font-face {
+                font-family: "Anurati-Regular";
+                src: url("design_files/fonts/Anurati-Regular Font/Anurati-Regular.ttf");
+            }
+
+            @font-face {
+                font-family: "alexana";
+                src: url("design_files/fonts/fm/Alexana/Alexana Neue.ttf");
+            }
+
+            @font-face {
+                font-family: "elixia";
+                src: url("design_files/fonts/fm/Elixia_Free_Font/ELIXIA.ttf");
+            }
+
+            @font-face {
+                font-family: "marvel";
+                src: url("design_files/fonts/marvel/Marvel.ttf");
+            }
+
+            .tmp {
+                font-family: marvel;
+            }
+
+            /* Scroll-bar Styling */
+            /* width */
+            ::-webkit-scrollbar {
+                width: 15px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 5px whitesmoke;
+                /* border-radius: 10px; */
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #343a40;
+                /* border-radius: 10px; */
+            }
+
+            /* Handle on hover */
+            /* ::-webkit-scrollbar-thumb:hover {
+                background:whitesmoke;
+                box-shadow: inset 0 0 5px #343a40;
+            } */
+            /* Scroll-bar Styling */
+
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+                scroll-behavior: auto;
+            }
+
+            hr {
+                border: 1px solid darkturquoise;
+                border-radius: 5px;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            a:hover {
+                color: darkturquoise;
+                text-decoration: none;
+            }
+
+            h3:hover {
+                color: darkturquoise;
+                text-decoration: none;
+            }
+            
+            .tbtn {
+                color: white;
+                background: #343a40;
+                width : 150px;
+                height: 50px;
+                box-shadow:aqua;
+                border: none;
+                outline: none;
+                border-radius: 10px;
+            }
+            .tbtn:focus {
+                outline: none;
+            }
+            
+            .tbtn:hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+            }
+
+            .ttab {
+                width: 100%;
+                text-align: center;
+                background-color: whitesmoke;
+                color: #343a40;
+            }
+
+            .tcont {
+                background-color: red;
+                filter: blur(1px);
+            }
+
+            .rangegrid {
+                display: grid;
+                grid-template-columns: auto 50px auto;
+                grid-gap: 10px;
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .gridcont {
+                display: grid;
+                grid-template-columns: repeat(3, auto);
+                grid-gap: 10px;
+                padding: 10px;
+            }
+
+            .splgridcont {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(250px, 1fr));
+                grid-gap: 10px;
+                padding: 10px;
+            }
+
+            .gridcell:hover {
+                color: darkturquoise;
+                background-color: #1d2124;
+                border-radius: 10px;
+            }
+
+            .recbtn {
+                width: 100%;
+                height: 160px;
+                text-align: center;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            .recbtn:hover {
+                background-color: #1d2124;
+            }
+
+            .child {
+                position: absolute;
+                top: 50%;
+                margin-top: -25px;
+            }
+
+            .left {
+                width: 450px;
+            }
+            .lefti {
+                text-align: center;
+                float: right;
+            }
+
+            .middle {
+                width: 50px;
+            }
+
+            .right {
+                width: 450px;
+            }
+            .righti {
+                text-align: center;
+                float: left;
+            }
+
+            .filebtn {
+                background-color: black;
+                border-radius: 10px;
+            }
+            .overlay:hover {
+                opacity: 1;
+            }
+
+            .dropdown-content {
+                font-size : 16px;
+                display: none;
+                position: absolute;
+                background-color: rgb(52, 58, 64);
+                min-width: 150px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content a {
+                color: whitesmoke;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content :hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+                border-radius: 10px;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+        </style>
+        
+
+    </head>
+    <body class="h-100">
+        <nav class="navbar navbar-expand-lg bg-dark text-white" style="color: black;">
+            <div class="container-fluid">
+                <a class="navbar-brand" style="color: rgb(255, 255, 255); text-decoration-style :wavy;" href="/home">
+                    <img src="design_files/logos/mark 43.png" style="width: 125px; height: 45px">
+                </a>
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/image'">Upload Images</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/pdf'">Upload PDFs</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/mybooks'">My Books</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/allbooks'">All Books</button>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="tbtn navbar-brand">Options</button>
+                            <div class="dropdown-content">
+                              <a href="/accounts">My Profile</a>                                      
+                              <a id="btn-logout" href="/signin">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="row h-100 bg-light">
+
+            <div class="col-lg-12">
+                <div class="container" id="container_1">
+
+                    <!-- POSTS STARTS HERE -->
+
+                    <div class="jumbotron bg-dark" style="margin-top: 50px;">
+                        <div class="container text-center">
+                            <div class="text-center bg-dark text-light" style="margin-bottom: 50px;">
+                                <h3>All Books</h3>
+                            </div>
+                            <hr>
+
+                            <div class="container text-center">
+                                <div class="row container-fluid bg-3">
+                                    <div class="col-sm-12" id="all-books">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+
+                        </div>
+                    </div>
+                        
+                    <!-- POSTS END HERE -->
+                    
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/index.js"></script>
+
+        <script>
+
+        // *************** RETRIEVING AND DISPLAYING DATA FROM FIREBASE ******************
+            
+            retrieve()
+            function retrieve() {
+                
+                
+                var dbPosts = firebase.database().ref().child('Recent Books').orderByChild('timestamp').limitToFirst(5)
+                
+                dbPosts.on('value', function(posts) {
+                    if(posts.exists()) {
+                        console.log('hey')
+                        var postsHtml = ''
+                            
+                                posts.forEach(function (singlePost) {
+                                    console.log(singlePost.key)
+                                    
+                                        let value = singlePost.key
+                                        console.log(value)
+                                        postsHtml += "<hr><button type='button' class='tbtn navbar-brand' style='width: 100%; height: 120px;'"
+                                        postsHtml += "onclick=\"window.location.href='/book?bookname=" + value +"'\">"
+                                            postsHtml += singlePost.key.toUpperCase()
+                                        postsHtml += "</button><hr>"
+
+                        })
+                        
+                        $('#all-books').html(postsHtml)
+                    }
+                })
+            }
+
+        // *************** RETRIEVING AND DISPLAYING DATA FROM FIREBASE ******************
+        
+        </script>
+
+        <script>
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (!user) {
+                    window.location.href = "/signin";
+                }
+                else {
+                    console.log('user signed in!!!')
+                }
+            });
+        </script>
+
+    </body>
+</html>

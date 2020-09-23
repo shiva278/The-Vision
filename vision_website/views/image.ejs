@@ -1,0 +1,841 @@
+<!-- PAGE TO UPLOAD IMAGES -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VIS</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="design_files/css/all.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+            
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <style>
+            .dropdown {
+              position: relative;
+              display: inline-block;
+            }
+            
+            .dropdown-content {
+              display: none;
+              position: absolute;
+              background-color: #333;
+              min-width: 160px;
+              box-shadow: 0px 8px 16px 0px whitesmoke;
+              padding: 12px 16px;
+              z-index: 1;
+            }
+            
+            .dropdown:hover .dropdown-content {
+              display: block;
+            }
+
+            @font-face {
+              font-family: 'KeepCalm';
+              src:  
+                    url('Files/Fonts/KeepCalm-Medium.eot?') format('embedded-opentype'),
+                    url('Files/Fonts/KeepCalm-Medium.woff') format('woff'),
+                    url('Files/Fonts/KeepCalm-Medium.woff2') format('woff2'),
+                    url('Files/Fonts/KeepCalm-Medium.ttf') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'anuratiregular';
+                src: url('design_files/fonts/Anurati/anurati-regular-webfont.woff2') format('woff2'),
+                url('design_files/fonts/Anurati/anurati-regular-webfont.woff') format('woff');
+            }
+
+            @font-face {
+                font-family: "Anurati-Regular";
+                src: url("design_files/fonts/Anurati-Regular Font/Anurati-Regular.ttf");
+            }
+
+            @font-face {
+                font-family: "alexana";
+                src: url("design_files/fonts/fm/Alexana/Alexana Neue.ttf");
+            }
+
+            @font-face {
+                font-family: "elixia";
+                src: url("design_files/fonts/fm/Elixia_Free_Font/ELIXIA.ttf");
+            }
+
+            @font-face {
+                font-family: "marvel";
+                src: url("design_files/fonts/marvel/Marvel.ttf");
+            }
+
+            .tmp {
+                font-family: marvel;
+            }
+
+            /* Scroll-bar Styling */
+            /* width */
+            ::-webkit-scrollbar {
+                width: 15px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 5px whitesmoke;
+                /* border-radius: 10px; */
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #343a40;
+                /* border-radius: 10px; */
+            }
+
+            /* Handle on hover */
+            /* ::-webkit-scrollbar-thumb:hover {
+                background:whitesmoke;
+                box-shadow: inset 0 0 5px #343a40;
+            } */
+            /* Scroll-bar Styling */
+
+
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+                scroll-behavior: auto;
+            }
+
+            p, img {
+                border-radius: 10px;
+            }
+
+            i:hover {
+                color: darkturquoise;
+            }
+
+            hr {
+                border: 1px solid darkturquoise;
+                border-radius: 5px;
+            }
+
+            textarea {
+                background: #343a40;
+                color: whitesmoke;
+                border: 2px solid whitesmoke;
+                border-color: #343a40;
+                resize:none;
+                overflow: hidden;
+                outline: none;
+            }
+
+            textarea:hover {
+                border-color: whitesmoke;
+                border-width: 2px 0px 2px 0px;
+                background: #343a40;
+                overflow: auto;
+            }
+
+            textarea:focus {
+                border-color: whitesmoke;
+                border-width: 2px 0px 2px 0px;
+            }
+
+            .tbtn {
+                color: white;
+                background: #343a40;
+                width : 150px;
+                height: 50px;
+                box-shadow:aqua;
+                border: none;
+                outline: none;
+                border-radius: 10px;
+            }
+            .tbtn:focus {
+                outline: none;
+            }
+            
+            .tbtn:hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+            }
+
+            .ttab {
+                width: 100%;
+                text-align: center;
+                background-color: whitesmoke;
+                color: #343a40;
+            }
+
+            .tcont {
+                background-color: red;
+                filter: blur(1px);
+            }
+
+            .rangegrid {
+                display: grid;
+                grid-template-columns: auto 50px auto;
+                grid-gap: 10px;
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .gridcont {
+                display: grid;
+                grid-template-columns: repeat(3, auto);
+                grid-gap: 10px;
+                padding: 10px;
+                grid-column-gap: 10px;
+            }
+
+            .gridcont .gridcell {
+                border-style: solid;
+                border: whitesmoke;
+            }
+
+            .splgridcont {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(250px, 1fr));
+                grid-gap: 10px;
+                padding: 10px;
+            }
+
+            .recbtn {
+                width: 100%;
+                height: 160px;
+                text-align: center;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            .recbtn:hover {
+                background-color: #1d2124;
+            }
+
+            .child {
+                position: absolute;
+                top: 50%;
+                margin-top: -25px;
+            }
+
+            .left {
+                width: 450px;
+            }
+            .lefti {
+                text-align: center;
+                float: right;
+            }
+
+            .middle {
+                width: 50px;
+            }
+
+            .right {
+                width: 450px;
+            }
+            .righti {
+                text-align: center;
+                float: left;
+            }
+
+            .filebtn {
+                background-color: black;
+                border-radius: 10px;
+            }
+            .overlay:hover {
+                opacity: 1;
+            }
+
+            .dropdown-content {
+                font-size : 16px;
+                display: none;
+                position: absolute;
+                background-color: rgb(52, 58, 64);
+                min-width: 150px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content a {
+                color: whitesmoke;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content :hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+                border-radius: 10px;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+        </style>
+    </head>
+    <body class="h-100">
+        <nav class="navbar navbar-expand-lg bg-dark text-white" style="color: black;">
+            <div class="container-fluid">
+                <a class="navbar-brand" style="color: rgb(255, 255, 255); text-decoration-style :wavy;" href="/home">
+                    <img src="design_files/logos/mark 43.png" style="border: none; border-radius: 0; width: 125px; height: 45px">
+                </a>
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/temppdf'">Upload PDFs</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/mybooks'">My Books</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/allbooks'">All Books</button>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="tbtn navbar-brand">Options</button>
+                            <div class="dropdown-content">
+                              <a href="/accounts">My Profile</a>                                      
+                              <a id="btn-logout" href="/signin">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="row h-100 bg-light"></div>
+
+            <div class="col-lg-12">
+                <div class="container" id="container">
+                    <div class="jumbotron bg-dark" style="margin-top: 30px;">
+                        <script>
+                            var counter = 0
+                        </script>
+                        <div class="container text-center">
+                            <form id="main-form">
+                                <h2 style="color: whitesmoke;">Upload Book Images</h2>
+                                <br>
+                                <div class="form-group">
+                                    <h6 style="color: whitesmoke;">Enter Name of the Book</h6>
+                                    <input style="width: 300px; height: 40px;" type="text" id="book_name"/>
+                                    <div class="invalid-feedback" id="bookname_feedback">
+                                        Please enter the book's name properly
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div class="form-group">
+                                    <input class="btn btn-light bg-light text-dark" type="file" id="up_file" style="color: whitesmoke;" multiple/>
+                                    <div class="invalid-feedback" id="pics_not_exist_feedback">
+                                        Please choose pictures to upload <br> Can't leave it empty!
+                                    </div>
+                                    <div class="invalid-feedback" id="pics_feedback">
+                                        Please choose valid pictures!
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div id='img_container'>
+                                </div>  
+                                <br>
+
+                                <div class="form-group">
+                                    <h6 style="color: whitesmoke;">Enter Range of Pages</h6>
+                                    <div class="rangegrid">
+                                        <input class="lefti" type="text" id="stpg" placeholder="start page" oninput="updateLast()"/>
+                                        <p class="middle" style="color: whitesmoke;"> - to - </p>
+                                        <input class="righti" type="text" id="lspg" placeholder="last page" onchange="updateFirst()"/>
+                                    </div>
+                                    <div class="invalid-feedback" id="page_feedback">
+                                        Please choose valid page numbers!
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div class="form-group">
+                                    <div class="progress bg-secondary">
+                                        <div class="progress-bar bg-success" id="upload-progress" style="width: 0%;">
+                                            0%
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div class="form-group">
+                                    <button type="button" class="tbtn" id="btn-upload" style="width: 150px; height: 60px;">
+                                        Post
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div id="result"></div>
+
+                        </div>
+                    </div>
+                        
+
+                    <div class="jumbotron bg-dark" style="margin-top: 50px;">
+                        <div class="container text-center">
+                            <div class="text-center bg-dark text-light" style="margin-bottom: 50px;">
+                                <h3>Uploaded Posts</h3>
+                            </div>
+                            <hr>
+                            <div class="row container-fluid bg-3">
+                                <div class="col-sm-12" id="books">
+
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                    <br>
+
+
+                    <script type="text/javascript">
+                    
+                    
+                        function pt()
+                        {
+                            var pics = $('#up_file').prop('files')
+                            console.log(pics)
+                        }
+                                                
+                        var validImgTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif']
+                        var t=true
+
+                        function rem_container(elementId) {
+                            var element = document.getElementById(elementId);
+                            if (element) {
+                                element.parentNode.removeChild(element);
+                                if(t) {
+                                    t=false
+                                }
+                                else if (t==false) {
+                                    t=true
+                                }
+                            }
+                        }
+
+                        function add_container(elementId) {
+                            // Add the body container which will contain the img container and hence all the images we upload
+                            var body_div = document.createElement('div')
+                            body_div.id = 'bod'
+                            body_div.classList.add('gridcont')
+                            $('#img_container').append(body_div)
+                        }
+
+                        function resize_img(img) {
+                            //resize image based on aspect ratio
+                            img.style.height = 'auto'
+                            img.style.width = '265.33px'
+                        }
+
+                        function previewImgs (images, no_of_files) {
+                            //function to preview images before they're uploaded
+                            for(let i=0; i<no_of_files; i++){
+                                if (images.files && images.files[i]) {
+                                    
+                                    var reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        var tid = i+1
+
+                                        var h6 = document.createElement('h6')
+                                        var name = document.createTextNode(images.files[i].name);
+
+                                        h6.append(name)
+                                        h6.style.color = 'whitesmoke'
+                                    
+                                        var tdiv = document.createElement('div')
+                                        tdiv.id = 'tdiv_id_' + tid
+                                        tdiv.classList.add('form-group')
+                                        tdiv.style.overflow = 'hidden'
+
+                                        var img = new Image()
+                                        img.src = e.target.result
+
+                                        img.id =  'img_id_' + tid
+                                        img.onload = function() {
+                                            resize_img(img)
+                                        }
+
+                                        tdiv.append(h6)
+                                        tdiv.append(img)
+                                        $('#bod').append(tdiv)
+                                    }         
+            
+                                    reader.readAsDataURL(images.files[i])
+                                }
+                            }
+                        }
+
+                        $('#up_file').change(function() {
+                            rem_container('bod')
+                            add_container('bod')
+                            var l = this.files.length
+                            previewImgs(this, l)
+                        })
+
+                        // ******** AUTOMATICALLY SETTING THE PAGE NUMBERS BASED ON NUMBER OF FILES ********
+
+                        function updateLast() {
+                            var l = document.getElementById('up_file').files.length
+                            var st = document.getElementById('stpg').value
+
+                            st = parseInt(st, 10)
+
+                            if(l != 0 && l > 0) {
+                                if(!isNaN(eval(st)) && eval(st) > 0) {
+                                    var v = eval(st) + eval(l) - 1
+                                    if(v>0) {
+                                        document.getElementById('lspg').value = v
+                                    }
+                                    else {
+                                        document.getElementById('stpg').value = ''
+                                    }
+                                }
+                                else if(isNaN(eval(st))) {
+                                    document.getElementById('stpg').value = ''
+                                    document.getElementById('lspg').value = ''
+                                }
+                                else if(eval(st) <= 0) {
+                                    document.getElementById('stpg').value = ''
+                                }
+                            }
+                            else if(l === 0) {
+                                document.getElementById('stpg').value = ''
+                                $('#up_file').addClass('is-invalid')
+                                $('#pics_not_exist_feedback').addClass('d-block')
+                                return
+                            }
+                        }
+
+                        function updateFirst() {
+                            var l = document.getElementById('up_file').files.length
+                            var ls = document.getElementById('lspg').value
+
+                            ls = parseInt(ls, 10)
+
+                            if(l != 0 && l > 0) {
+                                if(!isNaN(eval(ls)) && eval(ls) > 0) {
+                                    var v = eval(ls) - eval(l) + 1
+                                    if(v>0) {
+                                        document.getElementById('stpg').value = v
+                                    }
+                                    else {
+                                        document.getElementById('lspg').value = ''
+                                    }
+                                }
+                                else if(isNaN(eval(ls))) {
+                                    document.getElementById('stpg').value = ''
+                                    document.getElementById('lspg').value = ''
+                                }
+                                else if(eval(ls) <= 0) {
+                                    document.getElementById('lspg').value = ''
+                                }
+                            }
+                            else if(l === 0) {
+                                document.getElementById('lspg').value = ''
+                                $('#up_file').addClass('is-invalid')
+                                $('#pics_not_exist_feedback').addClass('d-block')
+                                return
+                            }
+                        }
+
+                        // ******** AUTOMATICALLY SETTING THE PAGE NUMBERS BASED ON NUMBER OF FILES ********
+
+                        function getFileName(pg, ext) {
+                            let dateStr = new Date().getTime()
+                            ext = ext.split('/')[1]
+                            return '(' + dateStr + ')' + pg + '.' + ext
+                        }
+
+                        $('#btn-upload').click(() => {
+                            $('#book_name').removeClass('is-invalid')
+                            $('#up_file').removeClass('is-invalid')
+
+                            var book = $('#book_name').val()
+                            var pics = $('#up_file').prop('files')
+
+                            var st = document.getElementById('stpg').value
+                            var ls = document.getElementById('lspg').value
+                            st = parseInt(st, 10)
+                            ls = parseInt(ls, 10)
+
+                            let pg = st - 1
+
+                            if(book == "") {
+                                $('#book_name').addClass('is-invalid')
+                                $('#bookname_feedback').addClass('d-block')
+                                return
+                            }
+                            else if(book != "") {
+                                $('#bookname_feedback').removeClass('d-block')
+                            }
+
+                            if(pics.length != 0) {
+                                $('#pics_not_exist_feedback').removeClass('d-block')
+                                for(let i =0; i < pics.length; i++) {
+                                    if(pics[i] == null) {
+                                        $('#up_file').addClass('is-invalid')
+                                        $('#pics_feedback').addClass('d-block')
+                                    }
+                                    else {
+                                        $('#pics_feedback').removeClass('d-block')
+                                    }
+
+                                    if($.inArray(pics[i]["type"], validImgTypes) < 0) {
+                                        $('#up_file').addClass('is-invalid')
+                                        $('#pics_feedback').addClass('d-block')
+                                        return
+                                    }
+                                    else {
+                                        $('#pics_feedback').removeClass('d-block')
+                                    }
+                                }
+                            }
+                            else if(pics.length == 0) {
+                                $('#up_file').addClass('is-invalid')
+                                $('#pics_not_exist_feedback').addClass('d-block')
+                                return
+                            }
+
+                            if(isNaN(st) || isNaN(ls) || isNaN(pg)) {
+                                $('#pages').addClass('is-invalid')
+                                $('#page_feedback').addClass('d-block')
+                                return
+                            }
+                            else {
+                                $('#page_feedback').removeClass('d-block')
+                            }
+
+                            
+                            // *************** UPLOADING IMAGES to FIREBASE ******************
+
+                            
+                            var tmp_user = firebase.auth().currentUser
+                            var databaseRef = firebase.database().ref().child('Books/')
+                            var recentRef = firebase.database().ref().child('Recent Books/')
+
+                            var detected_text = []
+                            const files = document.getElementById('up_file').files
+                            
+                            const form_data = new FormData()
+                            
+                            for(let i = 0; i < files.length; i++) {
+                                form_data.append('files', files[i])
+                            }
+
+                            axios.post('/up_multiple', form_data).then(function(result) {
+                                //
+                                //    MAKING a REQUEST to the VISION API to DETECT TEXT FROM PICS
+                                //    RETURNS A PROMISE & IF AND WHEN PROMISE IS RESOLVED, TEXT IS WILL BE RETURNED
+                                //
+                                for(let i = 0; i < result.data.length; i++) {
+                                    detected_text.push(result.data[i])
+                                }
+                                return detected_text
+                            }).then(function(detected_text) {
+                                console.log(detected_text)
+                            
+                                for(let i = pics.length - 1; i >=0; i--) {
+                                    databaseRef.once('value').then(function (snapshot) {
+
+                                        var text = detected_text[i]
+                                        
+                                        let tmpPg = 0
+                                        pg++
+                                        tmpPg = pg
+                                        
+                                        var ext = pics[i].type
+                                        var fileName = getFileName(pg, ext)
+                                        var timestamp = Date.now()
+
+                                        var storageRef = firebase.storage().ref('Books/' + book + '/')
+                                        var imgStorageRef = storageRef.child(fileName)
+                                        var uploadTask = imgStorageRef.put(pics[i])
+
+                                        uploadTask.on('state_changed', function progress (snapshot) {
+                                            var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                                            $('#upload-progress').html(Math.round(percentage) + '%')
+                                            $('#upload-progress').attr('style', 'width:' + percentage + '%')
+                                        },
+                                        
+                                        function error(err) {
+                                            
+                                        },
+                                        function complete() {
+                                            var user = firebase.auth().currentUser
+                                            var userName
+                                            firebase.database().ref('Users/' + user.uid).once('value').then(function (snapshot) {
+                                                var fname = (snapshot.val() && snapshot.val().firstName)
+                                                var lname = (snapshot.val() && snapshot.val().lastName)
+                                                userName = fname + ' ' + lname
+                                            })
+                                            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadUrl) {
+                                                var time = new Date()
+                                                
+                                                var options = {
+                                                    weekday: 'long',
+                                                    month: 'long',
+                                                    day: '2-digit',
+                                                    year: 'numeric',
+                                                }
+                                                var imgData = {
+                                                    'image': downloadUrl,
+                                                    'name': fileName,
+                                                    'type': ext,
+                                                    'bookname': book,
+                                                    'page': tmpPg,
+                                                    'text': text,
+                                                    'user-id': user.uid,
+                                                    'user_name': userName,
+                                                    'time': time.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}),
+                                                    'date': time.toLocaleString('en-US', options),
+                                                    'timestamp':timestamp,
+                                                }
+                                                
+                                                let newPostRef = databaseRef.child(book.toLowerCase()).push()
+                                                newPostRef.set(imgData, function (err) {
+                                                    if(err) {
+                                                        $('#result').attr('class', 'alert alert-danger')
+                                                        $('#result').html(err.message)
+                                                    }
+                                                    else {
+                                                        $('#result').attr('class', 'alert alert-success')
+                                                        $('#result').html('The image has been successfully uploaded xD')
+                                                        resetForm(book)
+                                                    }
+                                                })
+
+                                                var recentData = {
+                                                    'timestamp': eval(timestamp * -1),
+                                                }
+
+                                                let newRecentRef = recentRef.child(book.toLowerCase())
+                                                newRecentRef.set(recentData, function (err) {
+                                                    if(err) {
+                                                        $('#result').attr('class', 'alert alert-danger')
+                                                        $('#result').html(err.message)
+                                                    }
+                                                    else {
+                                                        $('#result').attr('class', 'alert alert-success')
+                                                        $('#result').html('The image has been successfully uploaded xD')
+                                                        resetForm(book)
+                                                    }
+                                                })
+                                            })
+                                        })
+                                    })
+                                }
+                            }).catch(function(err) {
+                                console.log(err)
+                                })
+
+                            // *************** UPLOADING IMAGES to FIREBASE ******************
+                        
+                        })
+
+                        function resetForm(book) {
+                            $('#main-form')[0].reset()
+                            rem_container('bod')
+                            $('#upload-progress').html('Completed')
+                            retrieve(book)
+                        }
+
+                    // *************** RETRIEVING AND DISPLAYING DATA FROM FIREBASE ******************
+
+                        function retrieve(book) {
+
+                            var book_name = book
+                            // console.log(book)
+                            // console.log(book_name)
+                            var dbPosts = firebase.database().ref().child('Books').child(book.toLowerCase()).orderByChild('page')
+                            dbPosts.on('value', function(posts) {
+                                if(posts.exists()) {
+                                    var postsHtml = ''
+                                    
+                                    posts.forEach(function (singlePost) {
+
+                                        postsHtml += "<hr><div class='jumbotron bg-dark text-light border border-dark'>"
+                                            postsHtml += "<div class='gridcont' style='margin: 5px; width: auto; max-height: 100%'>"
+                                                postsHtml += "<div style='border-style: solid; border: whitesmoke'>"
+                                                    postsHtml += "<h4 class='text-center bg-dark text-light'>"
+                                                        + "Page " + singlePost.val().page + "</h4>"
+                                                        postsHtml += "<img style='margin: 5px; max-width: 100%; max-height: 600px' src='"
+                                                        // max-height: 600px
+                                                        postsHtml += singlePost.val().image + "'/>"
+                                                    postsHtml += "</div>"
+                                                    
+                                                    postsHtml += "<div style='border-style: solid; border: whitesmoke'>"
+                                                        let pid='p_id_' + singlePost.val().page
+                                                        // console.log(pid)
+                                                        postsHtml += "<h4 class='text-center bg-dark text-light'>Detected-Text</h4>"
+                                                        
+                                                        postsHtml += "<div id='editPost_" + pid + "'>"
+                                                            postsHtml += "<p id='" + pid + "' class='comment'>"
+                                                                postsHtml += singlePost.val().text
+                                                            postsHtml += "</p>"
+                                                        postsHtml += "</div>"
+                                                    postsHtml += "</div>"
+                                                postsHtml += "</div><br>"
+                                                    
+                                                    
+                                                    postsHtml += "<div class='row'>"
+                                                        postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                            + "File Name : " + singlePost.val().name
+                                                            + "</p></div>"
+
+                                                        postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                            + "Posted By : " + singlePost.val().user_name
+                                                            + "</p></div>"
+                                                        
+                                                        postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                            + "Time : " + singlePost.val().time
+                                                            + "</p></div>"
+                                                        
+                                                            postsHtml += "<div class='col-sm-5'><p style='color: whitesmoke'>"
+                                                                + "Date : " + singlePost.val().date
+                                                                + "</p></div>"
+                                            postsHtml += "</div><br>"
+                                                            
+                                        postsHtml += "</div><hr>"
+                                    });
+                                    $('#books').html(postsHtml)
+                                }
+                            })
+                        }
+
+                    // *************** RETRIEVING AND DISPLAYING DATA FROM FIREBASE ******************
+
+                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/index.js"></script>
+
+        <script>
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (!user) {
+                    window.location.href = "/signin";
+                }
+                else {
+                    console.log('user signed in!!!')
+                }
+            });
+        </script>
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

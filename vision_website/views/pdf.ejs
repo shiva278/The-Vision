@@ -1,0 +1,552 @@
+<!-- PAGE TO UPLOAD PDFs -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VIS</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="design_files/css/all.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+            
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-database.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-storage.js"></script>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <style>
+            .dropdown {
+              position: relative;
+              display: inline-block;
+            }
+            
+            .dropdown-content {
+              display: none;
+              position: absolute;
+              background-color: #333;
+              min-width: 160px;
+              box-shadow: 0px 8px 16px 0px whitesmoke;
+              padding: 12px 16px;
+              z-index: 1;
+            }
+            
+            .dropdown:hover .dropdown-content {
+              display: block;
+            }
+
+            @font-face {
+              font-family: 'KeepCalm';
+              src:  
+                    url('Files/Fonts/KeepCalm-Medium.eot?') format('embedded-opentype'),
+                    url('Files/Fonts/KeepCalm-Medium.woff') format('woff'),
+                    url('Files/Fonts/KeepCalm-Medium.woff2') format('woff2'),
+                    url('Files/Fonts/KeepCalm-Medium.ttf') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'anuratiregular';
+                src: url('design_files/fonts/Anurati/anurati-regular-webfont.woff2') format('woff2'),
+                url('design_files/fonts/Anurati/anurati-regular-webfont.woff') format('woff');
+            }
+
+            @font-face {
+                font-family: "Anurati-Regular";
+                src: url("design_files/fonts/Anurati-Regular Font/Anurati-Regular.ttf");
+            }
+
+            @font-face {
+                font-family: "alexana";
+                src: url("design_files/fonts/fm/Alexana/Alexana Neue.ttf");
+            }
+
+            @font-face {
+                font-family: "elixia";
+                src: url("design_files/fonts/fm/Elixia_Free_Font/ELIXIA.ttf");
+            }
+
+            @font-face {
+                font-family: "marvel";
+                src: url("design_files/fonts/marvel/Marvel.ttf");
+            }
+
+            .tmp {
+                font-family: marvel;
+            }
+
+            /* Scroll-bar Styling */
+            /* width */
+            ::-webkit-scrollbar {
+                width: 15px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 5px whitesmoke;
+                /* border-radius: 10px; */
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: #343a40;
+                /* border-radius: 10px; */
+            }
+
+            /* Handle on hover */
+            /* ::-webkit-scrollbar-thumb:hover {
+                background:whitesmoke;
+                box-shadow: inset 0 0 5px #343a40;
+            } */
+            /* Scroll-bar Styling */
+
+
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+                scroll-behavior: auto;
+            }
+
+            p, img {
+                border-radius: 10px;
+            }
+
+            i:hover {
+                color: darkturquoise;
+            }
+
+            hr {
+                border: 1px solid darkturquoise;
+                border-radius: 5px;
+            }
+
+            textarea {
+                background: #343a40;
+                color: whitesmoke;
+                border: 2px solid whitesmoke;
+                border-color: #343a40;
+                resize:none;
+                overflow: hidden;
+                outline: none;
+            }
+
+            textarea:hover {
+                border-color: whitesmoke;
+                border-width: 2px 0px 2px 0px;
+                background: #343a40;
+                overflow: auto;
+            }
+
+            textarea:focus {
+                border-color: whitesmoke;
+                border-width: 2px 0px 2px 0px;
+            }
+
+            .tbtn {
+                color: white;
+                background: #343a40;
+                width : 150px;
+                height: 50px;
+                box-shadow:aqua;
+                border: none;
+                outline: none;
+                border-radius: 10px;
+            }
+            .tbtn:focus {
+                outline: none;
+            }
+            
+            .tbtn:hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+            }
+
+            .ttab {
+                width: 100%;
+                text-align: center;
+                background-color: whitesmoke;
+                color: #343a40;
+            }
+
+            .tcont {
+                background-color: red;
+                filter: blur(1px);
+            }
+
+            .rangegrid {
+                display: grid;
+                grid-template-columns: auto 50px auto;
+                grid-gap: 10px;
+                padding: 10px;
+                margin: 10px;
+            }
+
+            .gridcont {
+                display: grid;
+                grid-template-columns: repeat(3, auto);
+                grid-gap: 10px;
+                padding: 10px;
+                grid-column-gap: 10px;
+            }
+
+            .gridcont .gridcell {
+                border-style: solid;
+                border: whitesmoke;
+            }
+
+            .splgridcont {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(250px, 1fr));
+                grid-gap: 10px;
+                padding: 10px;
+            }
+
+            .recbtn {
+                width: 100%;
+                height: 160px;
+                text-align: center;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            .recbtn:hover {
+                background-color: #1d2124;
+            }
+
+            .child {
+                position: absolute;
+                top: 50%;
+                margin-top: -25px;
+            }
+
+            .left {
+                width: 450px;
+            }
+            .lefti {
+                text-align: center;
+                float: right;
+            }
+
+            .middle {
+                width: 50px;
+            }
+
+            .right {
+                width: 450px;
+            }
+            .righti {
+                text-align: center;
+                float: left;
+            }
+
+            .filebtn {
+                background-color: black;
+                border-radius: 10px;
+            }
+            .overlay:hover {
+                opacity: 1;
+            }
+
+            .dropdown-content {
+                font-size : 16px;
+                display: none;
+                position: absolute;
+                background-color: rgb(52, 58, 64);
+                min-width: 150px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content a {
+                color: whitesmoke;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content :hover {
+                background-color: #1d2124;
+                color: darkturquoise;
+                border-radius: 10px;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+        </style>
+    </head>
+    <body class="h-100">
+        <nav class="navbar navbar-expand-lg bg-dark text-white" style="color: black;">
+            <div class="container-fluid">
+                <a class="navbar-brand" style="color: rgb(255, 255, 255); text-decoration-style :wavy;" href="/home">
+                    <img src="design_files/logos/mark 43.png" style="border: none; border-radius: 0; width: 125px; height: 45px">
+                </a>
+
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/image'">Upload Images</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/mybooks'">My Books</button>
+                    </li>
+                    <li class="active">
+                        <button class="tbtn navbar-brand" onclick="window.location.href='/allbooks'">All Books</button>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="tbtn navbar-brand">Options</button>
+                            <div class="dropdown-content">
+                              <a href="/accounts">My Profile</a>                                      
+                              <a id="btn-logout" href="/signin">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="row h-100 bg-light"></div>
+            <div class="col-lg-12">
+                <div class="container" id="container">
+                    <div class="jumbotron bg-dark" style="margin-top: 60px;">
+                        <script>
+                            var counter = 0
+                        </script>
+                        <div class="container text-center">
+                            <form id="main-form">
+                                <h2 style="color: whitesmoke;">Upload Book PDF</h2>
+                                <br>
+                                <div class="form-group">
+                                    <h6 style="color: whitesmoke;">Enter Name of the Book</h6>
+                                    <input style="width: 300px; height: 40px;" type="text" id="book_name"/>
+                                    <div class="invalid-feedback" id="bookname_feedback">
+                                        Please enter the book's name
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div class="form-group">
+                                    <input class="btn btn-light bg-light text-dark" type="file" id="up_file" style="color: whitesmoke;"/>
+                                    <div class="invalid-feedback" id="pdf_not_exist_feedback">
+                                        Please choose document to upload <br> Can't leave it empty!
+                                    </div>
+                                    <div class="invalid-feedback" id="pdf_feedback">
+                                        Please choose valid document!
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div id='img_container'>
+                                </div>  
+                                <br>
+        
+                                <div class="form-group">
+                                    <div class="progress bg-secondary">
+                                        <div class="progress-bar bg-success" id="upload-progress" style="width: 0%;">
+                                            0%
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+        
+                                <div class="form-group">
+                                    <button type="button" class="tbtn" id="btn-upload" style="width: 150px; height: 60px;">
+                                        Post
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div id="result"></div>
+
+                        </div>
+                    </div>
+
+
+                    <script type="text/javascript">
+
+                        var validType = ['application/pdf']
+
+                        function getFileName(pg, ext) {
+                            let dateStr = new Date().getTime()
+                            ext = ext.split('/')[1]
+                            return pg + '.' + ext + '(' + dateStr + ')'
+                        }
+
+                        $('#btn-upload').click(() => {
+
+                            var book = $('#book_name').val()
+
+                            var pdf = $('#up_file').prop('files')
+                            var l = pdf.length
+
+                            if(book == "") {
+                                $('#book_name').addClass('is-invalid')
+                                $('#bookname_feedback').addClass('d-block')
+                                $('#pdf_feedback').removeClass('d-block')
+                                $('#pdf_not_exist_feedback').removeClass('d-block')
+                                return
+                            }
+                            else if(book != "") {
+                                $('#bookname_feedback').removeClass('d-block')
+                                $('#pdf_feedback').removeClass('d-block')
+                                $('#pdf_not_exist_feedback').removeClass('d-block')
+                            }
+
+                            if(l === 0) {
+                                $('#up_file').addClass('is-invalid')
+                                $('#pdf_not_exist_feedback').addClass('d-block')
+                                return
+                            }
+
+                            else {
+                                $('#pdf_not_exist_feedback').removeClass('d-block')
+                            }
+
+                            if($.inArray(pdf[0]["type"], validType) < 0) {
+                                $('#up_file').addClass('is-invalid')
+                                $('#pdf_feedback').addClass('d-block')
+                                return
+                            }
+                            
+                            else {
+                                $('#pdf_feedback').removeClass('d-block')
+                            }
+
+                            
+                            // *************** UPLOADING PDFs to FIREBASE ******************
+                            
+                            const files = document.getElementById('up_file').files
+
+                            var tmp_user = firebase.auth().currentUser
+                            var databaseRef = firebase.database().ref().child('PDFs/')
+                            
+                            var text = ''
+
+                            const form_data = new FormData()
+                        
+                            form_data.append('file', pdf[0])
+
+                            databaseRef.once('value').then(function (snapshot) {
+
+                                axios.post('/up_pdf', form_data).then(function(result) {
+                                    // *************** DETECTION OF TEXT FROM PDF ******************
+
+                                    text = result.data.text
+                                    // console.log(text)
+                                    return text
+
+                                    // *************** DETECTION OF TEXT FROM PDF ******************
+                                }).then(function (text) {
+                                    
+                                    console.log('files :')
+                                    console.log(files)
+                                    console.log('pdf :')
+                                    console.log(pdf)
+                                    console.log('pdf[0].name :')
+                                    console.log(pdf[0].name)
+                                    console.log('text :')
+                                    console.log(text)
+                                    
+                                    var fileName = pdf[0].name
+                                    var timestamp = Date.now()
+                                    
+                                    var storageRef = firebase.storage().ref('PDFs/' + book + '/')
+                                    var imgStorageRef = storageRef.child(fileName)
+                                    var uploadTask = imgStorageRef.put(pdf[0])
+                                    
+                                    uploadTask.on('state_changed', function progress (snapshot) {
+                                        var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                                        $('#upload-progress').html(Math.round(percentage) + '%')
+                                        $('#upload-progress').attr('style', 'width:' + percentage + '%')
+                                    },
+                                    
+                                    function error(err) {
+                                        
+                                    },
+                                    
+                                    function complete() {
+                                        var user = firebase.auth().currentUser
+                                        var userName
+                                        
+                                        firebase.database().ref('Users/' + user.uid).once('value').then(function (snapshot) {
+                                            var fname = (snapshot.val() && snapshot.val().firstName)
+                                            var lname = (snapshot.val() && snapshot.val().lastName)
+                                            userName = fname + ' ' + lname
+                                        })
+                                        
+                                        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadUrl) {
+                                            var time = new Date()
+                                            
+                                            var options = {
+                                                weekday: 'long',
+                                                month: 'long',
+                                                day: '2-digit',
+                                                year: 'numeric',
+                                            }
+                                            
+                                            var pdfData = {
+                                                'pdf': downloadUrl,
+                                                'name': fileName,
+                                                'type': pdf[0].type,
+                                                'bookname': book,
+                                                'detected-text': text,
+                                                'user-id': user.uid,
+                                                'user_name': userName,
+                                                'time': time.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}),
+                                                'date': time.toLocaleString('en-US', options),
+                                                'timestamp':timestamp,
+                                            }
+                                            
+                                            let newPostRef = databaseRef.child(book).push()
+                                            newPostRef.set(pdfData, function (err) {
+                                                if(err) {
+                                                    $('#result').attr('class', 'alert alert-danger')
+                                                    $('#result').html(err.message)
+                                                }
+                                                
+                                                else {
+                                                    $('#result').attr('class', 'alert alert-success')
+                                                    $('#result').html('The image has been successfully uploaded xD')
+                                                    resetForm(book)
+                                                }
+                                            })
+                                        })
+                                    })
+
+                                }).catch(function(err) {
+                                    console.log(err)
+                                })
+                            })
+                        })
+
+                        function resetForm() {
+                            $('#main-form')[0].reset()
+                            $('#upload-progress').html('Completed')
+                        }
+                        
+                    </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/index.js"></script>
+
+        <script>
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (!user) {
+                    window.location.href = "/signin";
+                }
+                else {
+                    console.log('user signed in!!!')
+                }
+            });
+        </script>
+    </body>
+</html>
